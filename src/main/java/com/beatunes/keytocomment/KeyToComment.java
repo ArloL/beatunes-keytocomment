@@ -6,6 +6,15 @@
  */
 package com.beatunes.keytocomment;
 
+import java.util.List;
+
+import javax.persistence.Entity;
+
+import org.jruby.RubyObject;
+import org.python.core.PyProxy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.tagtraum.audiokern.AudioSong;
 import com.tagtraum.audiokern.key.Key;
 import com.tagtraum.beatunes.KeyTextRenderer;
@@ -13,13 +22,6 @@ import com.tagtraum.beatunes.analysis.AnalysisException;
 import com.tagtraum.beatunes.analysis.SongAnalysisTask;
 import com.tagtraum.beatunes.analysis.Task;
 import com.tagtraum.beatunes.keyrenderer.DefaultKeyTextRenderer;
-import org.jruby.RubyObject;
-import org.python.core.PyProxy;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.persistence.Entity;
-import java.util.List;
 
 /**
  * Copies tonal key info to the comments field using the configured renderer.
@@ -106,7 +108,7 @@ public class KeyToComment extends SongAnalysisTask {
 		// check whether we can skip this step altogether
 		if (skip()) {
 			if (LOG.isDebugEnabled())
-				LOG.debug("Skipped " + getSong());
+				LOG.debug("Skipped {}", getSong());
 			return;
 		}
 		// get the song object
@@ -114,7 +116,7 @@ public class KeyToComment extends SongAnalysisTask {
 		// get the new comment
 		final String newComments = getNewComments(song);
 		if (LOG.isDebugEnabled())
-			LOG.debug("Setting new comments to: " + newComments);
+			LOG.debug("Setting new comments to: {}", newComments);
 		// store new comment - the new value is automatically persisted and the
 		// UI is updated.
 		song.setComments(newComments);
@@ -134,7 +136,7 @@ public class KeyToComment extends SongAnalysisTask {
 		final boolean skip = commentsKey != null
 				&& commentsKey.equals(renderedKey);
 		if (LOG.isDebugEnabled())
-			LOG.debug("Skipping " + song + " ...");
+			LOG.debug("Skipping {} ...", song);
 		return skip;
 	}
 
