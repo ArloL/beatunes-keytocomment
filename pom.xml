@@ -41,7 +41,7 @@
 			<artifactId>beatunes</artifactId>
 			<version>5.0.0</version>
 			<exclusions>
-                <!-- exclude some dependencies that are not in public repositories -->
+				<!-- exclude some dependencies that are not in public repositories -->
 				<exclusion>
 					<groupId>com.sun.media.jai</groupId>
 					<artifactId>jai-codec</artifactId>
@@ -96,25 +96,25 @@
 		</resources>
 		<plugins>
 			<plugin>
-    <groupId>org.apache.maven.plugins</groupId>
-    <artifactId>maven-toolchains-plugin</artifactId>
-    <version>1.1</version>
-    <executions>
-      <execution>
-        <goals>
-          <goal>toolchain</goal>
-        </goals>
-      </execution>
-    </executions>
-    <configuration>
-      <toolchains>
-        <jdk>
-          <version>1.8</version>
-		  <vendor>zulu</vendor>
-        </jdk>
-      </toolchains>
-    </configuration>
-  </plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-toolchains-plugin</artifactId>
+				<version>1.1</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>toolchain</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<toolchains>
+						<jdk>
+							<version>1.8</version>
+							<vendor>zulu</vendor>
+						</jdk>
+					</toolchains>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>net.revelc.code.formatter</groupId>
 				<artifactId>formatter-maven-plugin</artifactId>
@@ -147,7 +147,7 @@
 			</plugin>
 		</plugins>
 		<extensions>
-            <!-- Required because of HTTPS peer authentication issues -->
+			<!-- Required because of HTTPS peer authentication issues -->
 			<extension>
 				<groupId>org.apache.maven.wagon</groupId>
 				<artifactId>wagon-http</artifactId>
@@ -156,9 +156,9 @@
 		</extensions>
 	</build>
 	<scm>
-		<connection>scm:git:git://github.com/beatunes/plugin-samples.git</connection>
-		<developerConnection>scm:git:ssh://git@github.com/beatunes/plugin-samples.git</developerConnection>
-		<url>https://github.com/beatunes/plugin-samples/tree/master/keytocomment</url>
+		<connection>scm:git:https://github.com/ArloL/beatunes-keytocomment</connection>
+		<developerConnection>scm:git:https://github.com/ArloL/beatunes-keytocomment</developerConnection>
+		<url>https://github.com/ArloL/beatunes-keytocomment</url>
 		<tag>HEAD</tag>
 	</scm>
 	<issueManagement>
