@@ -4,18 +4,19 @@
  * All rights reserved.
  * =================================================
  */
-package com.beatunes.keytocomment;
+package io.arlol.github.beatunes.keytocomment;
+
+import java.awt.*;
+import java.util.prefs.Preferences;
+
+import javax.swing.*;
 
 import com.tagtraum.beatunes.BeaTunes;
 import com.tagtraum.beatunes.KeyTextRenderer;
 import com.tagtraum.beatunes.analysis.TaskEditor;
 
-import javax.swing.*;
-import java.awt.*;
-import java.util.prefs.Preferences;
-
 /**
- * Configuration editor for {@link com.beatunes.keytocomment.KeyToComment} task.
+ * Configuration editor for {@link KeyToComment} task.
  *
  * @author <a href="mailto:hs@tagtraum.com">Hendrik Schreiber</a>
  */
@@ -23,7 +24,7 @@ public class KeyToCommentEditor implements TaskEditor<KeyToComment> {
 
 	private static final Preferences PREFERENCES = java.util.prefs.Preferences
 			.userNodeForPackage(KeyToCommentEditor.class);
-	private static final String ANALYSISOPTIONS_KEY_RENDERER = "analysisoptions.key.renderer";
+	private static final String ANALYSIS_OPTIONS_KEY_RENDERER = "analysisoptions.key.renderer";
 
 	private BeaTunes application;
 	private final JPanel component = new JPanel();
@@ -57,7 +58,7 @@ public class KeyToCommentEditor implements TaskEditor<KeyToComment> {
 				.getImplementations(KeyTextRenderer.class);
 		this.keyTextRendererComboBox.setModel(
 				new DefaultComboBoxModel<>(
-						renderers.toArray(new KeyTextRenderer[renderers.size()])
+						renderers.toArray(new KeyTextRenderer[0])
 				)
 		);
 		this.keyTextRendererComboBox.setSelectedItem(
@@ -91,17 +92,17 @@ public class KeyToCommentEditor implements TaskEditor<KeyToComment> {
 
 		});
 
-		final String classname = PREFERENCES.get(
-				ANALYSISOPTIONS_KEY_RENDERER,
+		final String className = PREFERENCES.get(
+				ANALYSIS_OPTIONS_KEY_RENDERER,
 				application.getGeneralPreferences()
 						.getKeyTextRenderer()
 						.getClass()
 						.getName()
 		);
 		for (final KeyTextRenderer renderer : renderers) {
-			final String rendererClassname = KeyToComment
+			final String rendererClassName = KeyToComment
 					.getClassName(renderer);
-			if (rendererClassname.equals(classname)) {
+			if (rendererClassName.equals(className)) {
 				keyTextRendererComboBox.setSelectedItem(renderer);
 				break;
 			}
@@ -135,9 +136,9 @@ public class KeyToCommentEditor implements TaskEditor<KeyToComment> {
 	public KeyToComment getTask(final KeyToComment keyToComment) {
 		final KeyTextRenderer renderer = keyTextRendererComboBox
 				.getItemAt(keyTextRendererComboBox.getSelectedIndex());
-		final String classname = KeyToComment.getClassName(renderer);
-		keyToComment.setRendererClass(classname);
-		PREFERENCES.put(ANALYSISOPTIONS_KEY_RENDERER, classname);
+		final String className = KeyToComment.getClassName(renderer);
+		keyToComment.setRendererClass(className);
+		PREFERENCES.put(ANALYSIS_OPTIONS_KEY_RENDERER, className);
 		return keyToComment;
 	}
 

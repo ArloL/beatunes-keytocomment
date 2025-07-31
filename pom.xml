@@ -10,7 +10,7 @@
 	<prerequisites>
 		<maven>3.0.5</maven>
 	</prerequisites>
-	<groupId>com.beatunes</groupId>
+	<groupId>io.github.arlol</groupId>
 	<artifactId>keytocomment</artifactId>
 	<version>3.0.5-SNAPSHOT</version>
 	<packaging>jar</packaging>

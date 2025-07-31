@@ -4,7 +4,7 @@
  * All rights reserved.
  * =================================================
  */
-package com.beatunes.keytocomment;
+package io.arlol.github.beatunes.keytocomment;
 
 import java.util.List;
 
@@ -42,8 +42,8 @@ public class KeyToComment extends SongAnalysisTask {
 
 	private static final Logger LOG = LoggerFactory
 			.getLogger(KeyToComment.class);
-	private static final String KEY_START_MARKER = "KEY:";
-	private static final String KEY_END_MARKER = ";";
+	private static final String KEY_START_MARKER = "Key ";
+	private static final String KEY_END_MARKER = "\n";
 
 	public KeyToComment() {
 		// this task does not take long - therefore we ignore it in per task
@@ -174,23 +174,22 @@ public class KeyToComment extends SongAnalysisTask {
 	 * @return key or <code>null</code>, if not found
 	 */
 	private String getKey(final String comments) {
-		final String keyString;
 		if (comments == null || comments.length() < KEY_START_MARKER.length()
 				+ KEY_END_MARKER.length()) {
-			keyString = null;
+			return null;
+		}
+		final String keyString;
+		final int start = comments.indexOf(KEY_START_MARKER);
+		if (start == -1) {
+			return null;
 		} else {
-			final int start = comments.indexOf(KEY_START_MARKER);
-			if (start == -1) {
-				keyString = null;
+			final int end = comments.indexOf(KEY_END_MARKER, start);
+			if (end == -1) {
+				return null;
 			} else {
-				final int end = comments.indexOf(KEY_END_MARKER, start);
-				if (end == -1) {
-					keyString = null;
-				} else {
-					keyString = comments
-							.substring(start + KEY_START_MARKER.length(), end);
-					// keyString = KeyFactory.parseTKEY(key);
-				}
+				keyString = comments
+						.substring(start + KEY_START_MARKER.length(), end);
+				// keyString = KeyFactory.parseTKEY(key);
 			}
 		}
 		return keyString;
