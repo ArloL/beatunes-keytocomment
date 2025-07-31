@@ -42,7 +42,7 @@ public class KeyToComment extends SongAnalysisTask {
 
 	private static final Logger LOG = LoggerFactory
 			.getLogger(KeyToComment.class);
-	private static final String KEY_START_MARKER = "Key ";
+	private static final String KEY_START_MARKER = "key=";
 	private static final String KEY_END_MARKER = "\n";
 
 	public KeyToComment() {
@@ -74,6 +74,10 @@ public class KeyToComment extends SongAnalysisTask {
 		// default to DefaultKeyTextRenderer
 		return getApplication().getPluginManager()
 				.getImplementation(DefaultKeyTextRenderer.class);
+	}
+
+	public String toKeyString(Key key) {
+		return getRenderer().toKeyString(key);
 	}
 
 	/**
@@ -132,7 +136,7 @@ public class KeyToComment extends SongAnalysisTask {
 		final AudioSong song = getSong();
 		final String comments = song.getComments();
 		final String commentsKey = getKey(comments);
-		final String renderedKey = getRenderer().toKeyString(song.getKey());
+		final String renderedKey = toKeyString(song.getKey());
 		final boolean skip = commentsKey != null
 				&& commentsKey.equals(renderedKey);
 		if (LOG.isDebugEnabled())
@@ -173,7 +177,7 @@ public class KeyToComment extends SongAnalysisTask {
 	 * @param comments comment
 	 * @return key or <code>null</code>, if not found
 	 */
-	private String getKey(final String comments) {
+	String getKey(final String comments) {
 		if (comments == null || comments.length() < KEY_START_MARKER.length()
 				+ KEY_END_MARKER.length()) {
 			return null;
@@ -189,7 +193,6 @@ public class KeyToComment extends SongAnalysisTask {
 			} else {
 				keyString = comments
 						.substring(start + KEY_START_MARKER.length(), end);
-				// keyString = KeyFactory.parseTKEY(key);
 			}
 		}
 		return keyString;
@@ -217,8 +220,7 @@ public class KeyToComment extends SongAnalysisTask {
 	 * @return new comment with key
 	 */
 	private String addCommentsKey(final String comments, final Key key) {
-		return comments + KEY_START_MARKER + getRenderer().toKeyString(key)
-				+ KEY_END_MARKER;
+		return comments + KEY_START_MARKER + toKeyString(key) + KEY_END_MARKER;
 	}
 
 	/**
