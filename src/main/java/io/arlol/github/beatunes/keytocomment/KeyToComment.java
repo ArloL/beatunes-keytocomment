@@ -15,7 +15,6 @@ import org.python.core.PyProxy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.tagtraum.audiokern.AudioSong;
 import com.tagtraum.audiokern.key.Key;
 import com.tagtraum.beatunes.KeyTextRenderer;
 import com.tagtraum.beatunes.analysis.AnalysisException;
@@ -42,8 +41,6 @@ public class KeyToComment extends SongAnalysisTask {
 
 	private static final Logger LOG = LoggerFactory
 			.getLogger(KeyToComment.class);
-	private static final String KEY_START_MARKER = "key=";
-	private static final String KEY_END_MARKER = "\n";
 
 	public KeyToComment() {
 		// this task does not take long - therefore we ignore it in per task
@@ -77,6 +74,10 @@ public class KeyToComment extends SongAnalysisTask {
 	}
 
 	public String toKeyString(Key key) {
+		// during testing we cant set the application so we need a fallback
+		if (getApplication() == null) {
+			return key.getOpenKeyCode();
+		}
 		return getRenderer().toKeyString(key);
 	}
 
@@ -109,21 +110,13 @@ public class KeyToComment extends SongAnalysisTask {
 	 */
 	@Override
 	public void runBefore(final Task task) throws AnalysisException {
-		// check whether we can skip this step altogether
 		if (skip()) {
-			if (LOG.isDebugEnabled())
-				LOG.debug("Skipped {}", getSong());
+			LOG.debug("Skipped {}", getSong());
 			return;
 		}
-		// get the song object
-		final AudioSong song = getSong();
-		// get the new comment
-		final String newComments = getNewComments(song);
-		if (LOG.isDebugEnabled())
-			LOG.debug("Setting new comments to: {}", newComments);
-		// store new comment - the new value is automatically persisted and the
-		// UI is updated.
-		song.setComments(newComments);
+		final String newComment = getNewComments();
+		LOG.debug("Setting comment to: {}", newComment);
+		getSong().setComments(newComment);
 	}
 
 	/**
@@ -133,94 +126,21 @@ public class KeyToComment extends SongAnalysisTask {
 	 */
 	@Override
 	public boolean skip() {
-		final AudioSong song = getSong();
-		final String comments = song.getComments();
-		final String commentsKey = getKey(comments);
-		final String renderedKey = toKeyString(song.getKey());
-		final boolean skip = commentsKey != null
-				&& commentsKey.equals(renderedKey);
-		if (LOG.isDebugEnabled())
-			LOG.debug("Skipping {} ...", song);
-		return skip;
-	}
-
-	/**
-	 * Creates a new comment string.
-	 *
-	 * @param song song
-	 * @return new comment (with key, if the song has a key)
-	 */
-	private String getNewComments(final AudioSong song) {
-		String comments = song.getComments() == null ? "" : song.getComments();
-		if (hasCommentsKey(comments)) {
-			comments = removeCommentsKey(comments);
+		final String comments = getSong().getComments();
+		if (comments == null) {
+			return false;
 		}
-		if (song.getKey() != null) {
-			comments = addCommentsKey(comments, song.getKey());
+		if (comments.contains("mixed")) {
+			return true;
 		}
-		return comments;
-	}
-
-	/**
-	 * Indicates whether this comment contains a key.
-	 *
-	 * @param comments comment
-	 * @return true, if the comment contains a key
-	 */
-	private boolean hasCommentsKey(final String comments) {
-		return getKey(comments) != null;
-	}
-
-	/**
-	 * Extracts a key out of a comment string.
-	 *
-	 * @param comments comment
-	 * @return key or <code>null</code>, if not found
-	 */
-	String getKey(final String comments) {
-		if (comments == null || comments.length() < KEY_START_MARKER.length()
-				+ KEY_END_MARKER.length()) {
-			return null;
+		if (comments.contains("ignore")) {
+			return true;
 		}
-		final String keyString;
-		final int start = comments.indexOf(KEY_START_MARKER);
-		if (start == -1) {
-			return null;
-		} else {
-			final int end = comments.indexOf(KEY_END_MARKER, start);
-			if (end == -1) {
-				return null;
-			} else {
-				keyString = comments
-						.substring(start + KEY_START_MARKER.length(), end);
-			}
-		}
-		return keyString;
+		return comments.startsWith(getNewComments());
 	}
 
-	/**
-	 * Removes a key from a comment string.
-	 *
-	 * @param comments comment
-	 * @return comment without the key
-	 */
-	private String removeCommentsKey(final String comments) {
-		final int start = comments.indexOf(KEY_START_MARKER);
-		final int end = comments.indexOf(KEY_END_MARKER, start);
-		if (comments.length() > end)
-			return comments.substring(0, start) + comments.substring(end + 1);
-		return comments.substring(0, start);
-	}
-
-	/**
-	 * Adds a key to a comment.
-	 *
-	 * @param comments comment
-	 * @param key      key
-	 * @return new comment with key
-	 */
-	private String addCommentsKey(final String comments, final Key key) {
-		return comments + KEY_START_MARKER + toKeyString(key) + KEY_END_MARKER;
+	private String getNewComments() {
+		return "key=" + toKeyString(getSong().getKey());
 	}
 
 	/**

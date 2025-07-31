@@ -16,13 +16,13 @@ public class KeyToCommentTest {
 		song.setComments("key=4d");
 		song.setKey(MajorKey.A_MAJOR);
 
-		KeyToComment ktc = new TestableKeyToComment();
+		KeyToComment ktc = new KeyToComment();
 		ktc.setSong(song);
 
 		Task task = new Task();
 		task.setSong(song);
 
-		assertThat(ktc.skip()).isFalse();
+		assertThat(ktc.skip()).isTrue();
 	}
 
 }
