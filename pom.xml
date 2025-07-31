@@ -7,9 +7,6 @@
 		<version>3.5.3</version>
 		<relativePath />
 	</parent>
-	<prerequisites>
-		<maven>3.0.5</maven>
-	</prerequisites>
 	<groupId>io.github.arlol</groupId>
 	<artifactId>keytocomment</artifactId>
 	<version>3.0.5-SNAPSHOT</version>
@@ -86,6 +83,26 @@
 			</resource>
 		</resources>
 		<plugins>
+			<plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-toolchains-plugin</artifactId>
+    <version>1.1</version>
+    <executions>
+      <execution>
+        <goals>
+          <goal>toolchain</goal>
+        </goals>
+      </execution>
+    </executions>
+    <configuration>
+      <toolchains>
+        <jdk>
+          <version>1.8</version>
+		  <vendor>zulu</vendor>
+        </jdk>
+      </toolchains>
+    </configuration>
+  </plugin>
 			<plugin>
 				<groupId>net.revelc.code.formatter</groupId>
 				<artifactId>formatter-maven-plugin</artifactId>
