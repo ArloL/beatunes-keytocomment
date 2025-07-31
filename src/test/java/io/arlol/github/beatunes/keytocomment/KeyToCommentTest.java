@@ -13,7 +13,7 @@ public class KeyToCommentTest {
 	@Test
 	public void testCanBeSkipped() throws Exception {
 		Song song = new Song();
-		song.setComments("key=4d");
+		song.setComments("Key 4d");
 		song.setKey(MajorKey.A_MAJOR);
 
 		KeyToComment ktc = new KeyToComment();

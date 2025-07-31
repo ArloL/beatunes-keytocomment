@@ -140,7 +140,7 @@ public class KeyToComment extends SongAnalysisTask {
 	}
 
 	private String getNewComments() {
-		return "key=" + toKeyString(getSong().getKey());
+		return "Key " + toKeyString(getSong().getKey());
 	}
 
 	/**
