@@ -25,4 +25,49 @@ public class KeyToCommentTest {
 		assertThat(ktc.skip()).isTrue();
 	}
 
+	@Test
+	public void testMixesCanBeSkipped() throws Exception {
+		Song song = new Song();
+		song.setComments("mixed one");
+		song.setKey(MajorKey.A_MAJOR);
+
+		KeyToComment ktc = new KeyToComment();
+		ktc.setSong(song);
+
+		Task task = new Task();
+		task.setSong(song);
+
+		assertThat(ktc.skip()).isTrue();
+	}
+
+	@Test
+	public void testMixedTracksCanBeSkipped() throws Exception {
+		Song song = new Song();
+		song.setComments("mixed tracks");
+		song.setKey(MajorKey.A_MAJOR);
+
+		KeyToComment ktc = new KeyToComment();
+		ktc.setSong(song);
+
+		Task task = new Task();
+		task.setSong(song);
+
+		assertThat(ktc.skip()).isTrue();
+	}
+
+	@Test
+	public void testIgnoredTracksCanBeSkipped() throws Exception {
+		Song song = new Song();
+		song.setComments("ignore");
+		song.setKey(MajorKey.A_MAJOR);
+
+		KeyToComment ktc = new KeyToComment();
+		ktc.setSong(song);
+
+		Task task = new Task();
+		task.setSong(song);
+
+		assertThat(ktc.skip()).isTrue();
+	}
+
 }
