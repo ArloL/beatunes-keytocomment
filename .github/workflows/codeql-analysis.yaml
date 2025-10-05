@@ -10,8 +10,6 @@ on:
   schedule:
   - cron: '18 18 8 * *'
 permissions: {}
-env:
-  JAVA_VERSION: 21
 
 jobs:
   debug:
@@ -63,17 +61,19 @@ jobs:
         persist-credentials: false
     - uses: actions/setup-java@dded0888837ed1f317902acf8a20df0ad188d165 # v5.0.0
       with:
-        java-version: ${{ env.JAVA_VERSION }}
+        java-version: |
+          11
+          21
         distribution: temurin
         cache: 'maven'
     - name: Initialize CodeQL
-      uses: github/codeql-action/init@64d10c13136e1c5bce3e5fbde8d4906eeaafc885 # v3.30.5
+      uses: github/codeql-action/init@2d92b76c45b91eb80fc44c74ce3fce0ee94e8f9d # v3.29.5
       with:
         languages: ${{ matrix.language }}
     - name: Autobuild
-      uses: github/codeql-action/autobuild@64d10c13136e1c5bce3e5fbde8d4906eeaafc885 # v3.30.5
+      uses: github/codeql-action/autobuild@2d92b76c45b91eb80fc44c74ce3fce0ee94e8f9d # v3.29.5
     - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@64d10c13136e1c5bce3e5fbde8d4906eeaafc885 # v3.30.5
+      uses: github/codeql-action/analyze@2d92b76c45b91eb80fc44c74ce3fce0ee94e8f9d # v3.29.5
       with:
         category: "/language:${{matrix.language}}"
     - name: Make sure build did not change anything
